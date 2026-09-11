@@ -26,7 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.google.android.gms.location.LocationServices
+import android.location.LocationManager
+import android.content.Context
 import com.mns.suneventalarm.data.AlarmRepository
 import com.mns.suneventalarm.data.LocationRepository
 import com.mns.suneventalarm.data.SunAlarm
@@ -117,12 +118,12 @@ class MainActivity : ComponentActivity() {
 
     private fun fetchLocationAndSave() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    LocationRepository(this).saveLocation(location.latitude, location.longitude)
-                    Toast.makeText(this, "Location saved!", Toast.LENGTH_SHORT).show()
-                }
+            val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) 
+                ?: locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (location != null) {
+                LocationRepository(this).saveLocation(location.latitude, location.longitude)
+                Toast.makeText(this, "Location saved!", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -516,15 +517,15 @@ fun SettingsDialog(
                 Button(
                     onClick = {
                         if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-                            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                                if (location != null) {
-                                    lat = location.latitude.toString()
-                                    lng = location.longitude.toString()
-                                    Toast.makeText(context, "GPS Location fetched!", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    Toast.makeText(context, "Could not fetch GPS. Ensure location is enabled.", Toast.LENGTH_SHORT).show()
-                                }
+                            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                            val location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) 
+                                ?: locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                            if (location != null) {
+                                lat = location.latitude.toString()
+                                lng = location.longitude.toString()
+                                Toast.makeText(context, "GPS Location fetched!", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "Could not fetch GPS. Ensure location is enabled.", Toast.LENGTH_SHORT).show()
                             }
                         } else {
                             Toast.makeText(context, "Location permission not granted. Go to app settings.", Toast.LENGTH_SHORT).show()

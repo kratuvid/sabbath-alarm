@@ -65,8 +65,7 @@ dependencies {
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
     
-    // Location
-    implementation("com.google.android.gms:play-services-location:21.1.0")
+    // Location (Native Android)
     
     // Glance for App Widget
     implementation("androidx.glance:glance-appwidget:1.0.0")
