@@ -1,0 +1,10 @@
+Sabbath Alarm is a privacy-first, fully open-source alarm clock designed to help you track solar events. 
+
+Instead of setting an alarm for a specific time like 6:00 AM, Sabbath Alarm calculates exactly when the sun will rise or set in your specific location and rings relative to that event.
+
+Features:
+- Track Sunrise, Sunset, Solar Noon, and more.
+- Offset alarms (e.g. ring 30 minutes before sunset).
+- Beautiful, dynamic dark mode interface.
+- Home screen widget for quick viewing.
+- 100% offline and private. No tracking, no ads.
